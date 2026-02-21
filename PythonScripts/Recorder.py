@@ -3,6 +3,9 @@ import time
 import os
 from datetime import datetime
 
+# This script continuously takes screenshots of the user's screen at a specified interval 
+# and saves them to a designated folder.
+
 # --- CONFIGURATION ---
 SAVE_FOLDER = "screenshots"
 INTERVAL = 3  # seconds

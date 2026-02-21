@@ -7,6 +7,11 @@ import random
 import plotly.graph_objs as go
 from collections import deque
 
+# This is a simple Dash app that creates a live-updating graph. It uses a deque to store the last
+#  20 points of data for both X and Y axes. The graph updates every second with new random data, 
+# simulating a live data feed. The X values increment by 1, while the Y values fluctuate randomly 
+# around the previous value.
+
 X = deque(maxlen = 20)
 X.append(1)
 
