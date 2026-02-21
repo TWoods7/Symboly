@@ -12,7 +12,7 @@ class Overlay(QWidget):
 
         # Window setup
         self.setWindowFlags(
-            Qt.WindowType.FramelessWindowHint |
+            #Qt.WindowType.FramelessWindowHint |
             Qt.WindowType.WindowStaysOnTopHint
         )
 
