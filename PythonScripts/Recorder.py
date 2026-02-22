@@ -33,6 +33,7 @@ class AlertnessRecorder:
                     score = get_alertness_score(screenshot)
                     save_entry(score)
                     
+                    #This is if you want to save individual screenshots with scores in the filename (optional)
                     timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
                     file_name = f"{timestamp_str}_score_{score}.png"
                     screenshot.save(os.path.join(current_session_folder, file_name))

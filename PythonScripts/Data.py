@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 LOG_FOLDER = "data_logs"
-LIVE_FILE = "log.csv"
+LIVE_FILE = "Live Data\log.csv"
 current_session_file = ""
 
 def initialize_storage():
