@@ -15,22 +15,31 @@ class Overlay(QWidget):
         self.recorder_thread = None
 
         # Window Setup
+        layout = QVBoxLayout(self)
+
         self.setWindowTitle("Symboly Overlay")
         self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint )# | Qt.WindowType.FramelessWindowHint
         self.setWindowOpacity(0.67) # Sets transparency for the WHOLE window (0.0 to 1.0)
-        self.setStyleSheet("background-color: #262626;") # A dark base color
+        self.setStyleSheet("background-color: #rgba(0,0, 0, 0.6);") # A dark base color #262626
         self.setGeometry(100, 100, 800, 500)
+        
+        #layout = QVBoxLayout(self)
+        # These three lines ensure the content touches the window edges
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+        layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
-        layout = QVBoxLayout(self)
         # --- Controls Layout ---
         controls = QHBoxLayout()
-        
+        # Add a little internal padding to the buttons so they don't touch the top edge
+        controls.setContentsMargins(0, 0, 0, 0)
+
         self.btn_start = QPushButton("▶ Start")
         self.btn_pause = QPushButton("⏸ Pause")
         self.btn_stop = QPushButton("⏹ Stop")
         
         # Style buttons
-        style = "QPushButton { background: #222; color: white; padding: 8px; border-radius: 4px; } QPushButton:disabled { color: #555; }"
+        style = "QPushButton { background: rgba(0,0, 0, 0.6); color: white; padding: 8px; border-radius: 4px; } QPushButton:disabled { color: #555; }"
         for b in [self.btn_start, self.btn_pause, self.btn_stop]:
             b.setStyleSheet(style)
             controls.addWidget(b)
@@ -47,8 +56,14 @@ class Overlay(QWidget):
 
         # --- Browser ---
         self.browser = QWebEngineView()
+        # Ensure the browser itself doesn't have a background causing a "seam"
+        self.browser.setContentsMargins(0, 0, 0, 0)
+        # Kill the internal border of the browser widget
+        self.browser.setStyleSheet("border: none; margin: -1px")
+        
         self.browser.page().setBackgroundColor(Qt.GlobalColor.transparent)
         self.browser.setUrl(QUrl("http://127.0.0.1:8050"))
+
         layout.addWidget(self.browser)
 
     def save_snapshot(self):
