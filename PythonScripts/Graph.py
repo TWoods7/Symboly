@@ -1,6 +1,7 @@
 import dash
 from dash import dcc, html
 from dash.dependencies import Output, Input
+from collections import deque
 import plotly.graph_objs as go
 import pandas as pd
 import os
@@ -10,13 +11,14 @@ app = dash.Dash(__name__)
 
 # The Layout: Simple and designed for transparency
 app.layout = html.Div([
-    html.H2("Symboly Alertness Live HUD", 
-            style={'color': 'transparent', 'textAlign': 'center', 'fontFamily': 'Arial'}),
-    
+    #html.H2("Symboly Alertness Live HUD", 
+    #        style={'color': 'transparent', 'textAlign': 'center', 'fontFamily': 'Arial'}),
+    #
     dcc.Graph(
         id='live-graph', 
-        animate=True, 
-        config={'displayModeBar': False} # Hides the plotly toolbar for a cleaner look
+        animate=False, 
+        config={'displayModeBar': False}, # Hides the plotly toolbar for a cleaner look
+        style={'height': '100vh', 'width': '100%'}
     ),
     
     dcc.Interval(
@@ -24,14 +26,17 @@ app.layout = html.Div([
         interval=1000, # Updates every 1 second
         n_intervals=0
     ),
-], style={'backgroundColor': 'rgba(0,0,0,0)', 'margin': '0px', 'padding': '10px'})
+], style={'backgroundColor':'rgba(0,0,0,0)', 
+          'margin': '0px', 
+          'padding': '0px',
+          'overflow': 'hidden'})
 
 @app.callback(
     Output('live-graph', 'figure'),
     [Input('graph-update', 'n_intervals')]
 )
 def update_graph_scatter(n):
-    log_path = 'log.csv'
+    log_path = 'Live Data\log.csv'# This should match the path used in Data.py
     
     # Default empty lists if file doesn't exist yet
     times = []
@@ -40,10 +45,17 @@ def update_graph_scatter(n):
     # 1. Read the data from the live log
     if os.path.exists(log_path):
         try:
-            # We take the last 30 points to keep the graph moving
-            df = pd.read_csv(log_path, names=['Time', 'Score']).tail(30)
-            times = df['Time'].tolist()
-            scores = df['Score'].tolist()
+            # Open the file and read the last 30 lines directly
+            with open(log_path, 'r') as f:
+                # deque(f, 30) reads only the end of the file into memory
+                last_lines = deque(f, 30)
+            
+            # Parse the CSV lines into lists
+            for line in last_lines:
+                parts = line.strip().split(',')
+                if len(parts) == 2:
+                    times.append(parts[0])
+                    scores.append(float(parts[1]))
         except Exception as e:
             print(f"Graph Error: {e}")
 
@@ -56,41 +68,50 @@ def update_graph_scatter(n):
         line=dict(color="#8e5ef6", width=3), # Neon Cyan
         marker=dict(size=8, color='white', symbol='circle')
     )
-
+    # Calculate the X-axis range based on the last 30 points
+    if len(times) > 0:
+        # Set the window to show the most recent point and the one 30 steps back
+        x_range = [times[0], times[-1]] 
+    else:
+        x_range = [0, 30]
     layout = go.Layout(
         title={
-            'text': "Symboly Alertness HUD",
+            'text': "SYMBOLY ALERTNESS MONITOR",
             'y': 0.95,
             'x': 0.5,
             'xanchor': 'center',
             'yanchor': 'top',
-            'font': {'color': 'white', 'size': 20},
+            'font': {'color': 'white', 'size': 20, 'family': 'Courier New'},
         },
         xaxis=dict(
-            title=dict(text="Time (Last 30 Captures)", font=dict(color='white', size=14)),
+            title=dict(text="TIMELINE (REAL-TIME)", font=dict(color='white', size=14), standoff=20),
             color='white',
-            tickangle=-45, # Rotates labels for better fit
+            tickangle=-25, # Rotates labels for better fit
             nticks=10,     # Limits the number of labels shown at once
-            showgrid=True,
+            showgrid=False,
             gridcolor='rgba(255, 255, 255, 0.2)',
             showline=True,
             linecolor='white',
-            mirror=True
+            #mirror=True,
+            range=x_range,
+            fixedrange=True,
         ),
         yaxis=dict(
-            title=dict(text="Alertness Score", font=dict(color='white', size=14)),
+            title=dict(text="Alertness Score/Level", font=dict(color='white', size=14)),
             range=[0, 11],
+            fixedrange=True,
             color='white',
             showgrid=True,
             gridcolor='rgba(255, 255, 255, 0.2)',
             showline=True,
             linecolor='white',
-            mirror=True
+            #mirror=True
         ),
         paper_bgcolor='rgba(0,0, 0, 0.6)',
         plot_bgcolor='rgba(0,0,0,0)',
         # INCREASED MARGINS: l=left, r=right, t=top, b=bottom
-        margin=dict(l=80, r=40, t=80, b=80), 
+        margin=dict(l=35, r=25, t=25, b=60), 
+        autosize=True,
         #font=dict(color='white')
     )
 
