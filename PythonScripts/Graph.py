@@ -8,6 +8,33 @@ import os
 
 # Initialize the Dash app
 app = dash.Dash(__name__)
+app.index_string = '''
+<!DOCTYPE html>
+<html>
+    <head>
+        {%metas%}
+        <title>{%title%}</title>
+        {%favicon%}
+        {%css%}
+        <style>
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                background-color: transparent !important;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        {%app_entry%}
+        <footer>
+            {%config%}
+            {%scripts%}
+            {%renderer%}
+        </footer>
+    </body>
+</html>
+'''
 
 # The Layout: Simple and designed for transparency
 app.layout = html.Div([
