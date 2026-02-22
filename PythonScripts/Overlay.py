@@ -54,7 +54,7 @@ class Overlay(QWidget):
         self.camera_selector.currentIndexChanged.connect(self.change_camera)
         controls.addWidget(self.camera_selector)
 
-        self.btn_start = QPushButton("▶ Start")
+        self.btn_start = QPushButton("▶ Record")
         self.btn_pause = QPushButton("⏸ Pause")
         self.btn_stop = QPushButton("⏹ Stop")
 
