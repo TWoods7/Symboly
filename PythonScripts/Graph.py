@@ -64,11 +64,15 @@ def update_graph_scatter(n):
             'x': 0.5,
             'xanchor': 'center',
             'yanchor': 'top',
-            'font': {'color': 'white', 'size': 20}
+            'font': {'color': 'white', 'size': 20},
+            #'paper_bgcolor':'rgba(30, 30, 30, 0.6)', # Semi-transparent dark grey
+            #'plot_bgcolor' :'rgba(0, 0, 0, 0)',       # Keep the inner plot clear
         },
         xaxis=dict(
             title=dict(text="Time (Last 30 Captures)", font=dict(color='white', size=14)),
             color='white',
+            tickangle=-45, # Rotates labels for better fit
+            nticks=10,     # Limits the number of labels shown at once
             showgrid=True,
             gridcolor='rgba(255, 255, 255, 0.2)',
             showline=True,

@@ -11,9 +11,9 @@ def launch_symboly():
 
     # 1. Start Recorder (The Brain)
     # This now uses Data.py internally to manage logs
-    print("-> Launching Recorder...")
-    recorder_path = os.path.join(base_dir, "Recorder.py")
-    recorder = subprocess.Popen([sys.executable, recorder_path])
+    #print("-> Launching Recorder...")
+    #recorder_path = os.path.join(base_dir, "Recorder.py")
+    #recorder = subprocess.Popen([sys.executable, recorder_path])
 
     # 2. Start Graph (The Server)
     print("-> Launching Graph Server...")
@@ -45,7 +45,6 @@ def launch_symboly():
         # (Optional: If you want to force the save from here, 
         # you'd need to send a signal, but closeEvent is simpler!)
         
-        recorder.terminate()
         graph.terminate()
         overlay.terminate()
         print("👋 Symboly session archived. Goodbye!")
