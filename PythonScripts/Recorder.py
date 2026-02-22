@@ -1,50 +1,54 @@
-import pyautogui
+import cv2
 import time
 import os
-from datetime import datetime
+import pyautogui
+import pygetwindow as gw
+from PIL import Image  # FIX: This solves the 'Image is not defined' error
 from Emotion import get_alertness_score
 from Data import initialize_storage, save_entry
 
 class AlertnessRecorder:
     def __init__(self):
+        self.mode = "Hardware" # Default mode
+        self.window_title = "Zoom"
         self.running = False
         self.paused = False
         self.CAPTURE_INTERVAL = 0.5  # Seconds between captures
-        self.SCREENSHOT_BASE_FOLDER = "screenshots"
+        self.camera_index = 0  # Default webcam index (0 is usually the built-in webcam)
 
     def run(self):
         initialize_storage()
-        #/// This is if you want to save individual screenshots with scores in the filename (optional) ///
-        #       session_id = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        #       current_session_folder = os.path.join(self.SCREENSHOT_BASE_FOLDER, session_id)
-        #       if not os.path.exists(current_session_folder):
-        #           os.makedirs(current_session_folder)
-
-        print(f"🚀 Recorder Started.")
-        #print(f"📁 Session Folder: {current_session_folder}")
-        print(f"⏱️  Interval: {self.CAPTURE_INTERVAL}s")
-        print("---------------------------------------------")
-
+        cap = None
+        
         try:
             self.running = True
             while self.running:
                 if not self.paused:
-                    screenshot = pyautogui.screenshot()
-                    score = get_alertness_score(screenshot)
-                    save_entry(score)
+                    if self.mode == "Hardware":
+                        if cap is None or not cap.isOpened():
+                            cap = cv2.VideoCapture(self.camera_index)
+                        
+                        ret, frame = cap.read()
+                        if ret:
+                            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                            img = Image.fromarray(frame_rgb)
+                        else: continue
+                            
+                    else: # Screen Capture Mode
+                        if cap is not None: # Close camera if we switched modes
+                            cap.release()
+                            cap = None
+                            
+                        # Find window and take screenshot (your previous logic)
+                        img = pyautogui.screenshot() # Simplified for example
                     
-                    #/// This is if you want to save individual screenshots with scores in the filename (optional) ///
-                    #   timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-                    #   file_name = f"{timestamp_str}_score_{score}.png"
-                    #   screenshot.save(os.path.join(current_session_folder, file_name))
-                    print(f"Recorded Score: {score}")
-                
+                    score = get_alertness_score(img)
+                    save_entry(score)
                 time.sleep(self.CAPTURE_INTERVAL)
-
-        except KeyboardInterrupt:
-            print("\n👋 Recorder stopped by user.")
         except Exception as e:
-            print(f"\n❌ An error occurred: {e}")
+            print(f"❌ Recorder Error: {e}")
+        finally:
+            if cap: cap.release()
     
     def stop(self):
             self.running = False
