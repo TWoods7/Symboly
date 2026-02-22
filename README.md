@@ -75,3 +75,9 @@ Other Files and Folders:
     Data_logs – A folder that holds the logs with timestamps and scores each session
 
     Graphs – The end graph that gets uploaded after each session.
+
+HOW TO RUN:
+    //Have access to python 3.14 or a virtual machine in VScode that can run python
+    //For full fearute capability have access to either a camera that is pluged in or the built-in webcam.
+    //Run the start.py
+
