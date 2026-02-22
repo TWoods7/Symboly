@@ -14,14 +14,14 @@ class AlertnessRecorder:
 
     def run(self):
         initialize_storage()
-        session_id = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        current_session_folder = os.path.join(self.SCREENSHOT_BASE_FOLDER, session_id)
-        
-        if not os.path.exists(current_session_folder):
-            os.makedirs(current_session_folder)
+        #/// This is if you want to save individual screenshots with scores in the filename (optional) ///
+        #       session_id = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        #       current_session_folder = os.path.join(self.SCREENSHOT_BASE_FOLDER, session_id)
+        #       if not os.path.exists(current_session_folder):
+        #           os.makedirs(current_session_folder)
 
         print(f"🚀 Recorder Started.")
-        print(f"📁 Session Folder: {current_session_folder}")
+        #print(f"📁 Session Folder: {current_session_folder}")
         print(f"⏱️  Interval: {self.CAPTURE_INTERVAL}s")
         print("---------------------------------------------")
 
@@ -33,10 +33,10 @@ class AlertnessRecorder:
                     score = get_alertness_score(screenshot)
                     save_entry(score)
                     
-                    #This is if you want to save individual screenshots with scores in the filename (optional)
-                    timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-                    file_name = f"{timestamp_str}_score_{score}.png"
-                    screenshot.save(os.path.join(current_session_folder, file_name))
+                    #/// This is if you want to save individual screenshots with scores in the filename (optional) ///
+                    #   timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    #   file_name = f"{timestamp_str}_score_{score}.png"
+                    #   screenshot.save(os.path.join(current_session_folder, file_name))
                     print(f"Recorded Score: {score}")
                 
                 time.sleep(self.CAPTURE_INTERVAL)
