@@ -16,9 +16,9 @@ class Overlay(QWidget):
 
         # Window Setup
         self.setWindowTitle("Symboly Overlay")
-        self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint )#| Qt.WindowType.FramelessWindowHint
-        #self.setStyleSheet("background-color: rgba(0, 0, 0, 25);") # 150 is the alpha (0-255)
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint )# | Qt.WindowType.FramelessWindowHint
+        self.setWindowOpacity(0.67) # Sets transparency for the WHOLE window (0.0 to 1.0)
+        self.setStyleSheet("background-color: #262626;") # A dark base color
         self.setGeometry(100, 100, 800, 500)
 
         layout = QVBoxLayout(self)

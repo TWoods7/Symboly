@@ -21,8 +21,8 @@ def launch_symboly():
     graph = subprocess.Popen([sys.executable, graph_path])
 
     # Wait for Dash server to initialize (8050)
-    print("-> Waiting for server to stabilize...")
-    time.sleep(6) 
+    #print("-> Waiting for server to stabilize...")
+    #time.sleep(6) 
 
     # 3. Start Overlay (The HUD)
     print("-> Launching HUD Overlay...")
