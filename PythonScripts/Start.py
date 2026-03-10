@@ -11,9 +11,9 @@ def launch_symboly():
 
     # 1. Start Recorder (The Brain)
     # This now uses Data.py internally to manage logs
-    #print("-> Launching Recorder...")
-    #recorder_path = os.path.join(base_dir, "Recorder.py")
-    #recorder = subprocess.Popen([sys.executable, recorder_path])
+    print("-> Launching Recorder...")
+    recorder_path = os.path.join(base_dir, "Recorder.py")
+    recorder = subprocess.Popen([sys.executable, recorder_path])
 
     # 2. Start Graph (The Server)
     print("-> Launching Graph Server...")
@@ -21,8 +21,8 @@ def launch_symboly():
     graph = subprocess.Popen([sys.executable, graph_path])
 
     # Wait for Dash server to initialize (8050)
-    #print("-> Waiting for server to stabilize...")
-    #time.sleep(6) 
+    print("-> Waiting for server to stabilize...")
+    time.sleep(6) 
 
     # 3. Start Overlay (The HUD)
     print("-> Launching HUD Overlay...")
